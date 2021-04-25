@@ -1,10 +1,8 @@
 use chrono::prelude::{DateTime};
 use std::borrow::Cow;
 use usiem::components::common::LogParsingError;
-use usiem::events::field::{SiemField, SiemIp};
+use usiem::events::field::{SiemField};
 use usiem::events::{SiemLog, SiemEvent};
-use usiem::events::auth::{AuthEvent,AuthLoginType, LoginOutcome, RemoteLogin};
-use std::collections::BTreeMap;
 mod event_types;
 mod awstypes;
 use event_types::aws_event_type;

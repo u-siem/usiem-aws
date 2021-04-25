@@ -1,5 +1,4 @@
-use std::collections::BTreeMap;
-use usiem::events::field::{SiemField, SiemIp};
+use usiem::events::field::{SiemField};
 use usiem::events::{SiemLog, SiemEvent};
 use usiem::components::common::LogParsingError;
 use usiem::events::auth::{AuthEvent, AuthLoginType, LoginOutcome, RemoteLogin};
@@ -8,7 +7,6 @@ use super::super::event_types::domain_user_from_arn;
 use std::borrow::Cow;
 
 pub fn aws_console_sign_in(log_value : &serde_json::Value, mut log : SiemLog) -> Result<SiemLog, LogParsingError> {
-    let mut fields_added = BTreeMap::new();
     let event_name = match log_value.get("eventName") {
         Some(val) => val.as_str().unwrap_or(""),
         None => return Err(LogParsingError::NoValidParser(log))
@@ -17,7 +15,7 @@ pub fn aws_console_sign_in(log_value : &serde_json::Value, mut log : SiemLog) ->
         log.set_service(Cow::Borrowed("ConsoleLogin"));
         match log_value.get("additionalEventData") {
             Some(additional) => match get_string_field(additional, "MFAUsed") {
-                Some(val) => {fields_added.insert("user.mfa",val);},
+                Some(val) => {log.add_field("user.mfa",val);},
                 None => {}
             },
             None => {}
@@ -142,6 +140,10 @@ mod aws_tests {
         match parse_general_log(log) {
             Ok(log) => {
                 assert_eq!(
+                    log.field("user.mfa"),
+                    Some(&SiemField::from_str("No"))
+                );
+                assert_eq!(
                     log.field("user.id"),
                     Some(&SiemField::from_str("arn:aws:iam::811596193553:user/piper"))
                 );
@@ -227,6 +229,10 @@ mod aws_tests {
         match parse_general_log(log) {
             Ok(log) => {
                 assert_eq!(
+                    log.field("user.mfa"),
+                    Some(&SiemField::from_str("No"))
+                );
+                assert_eq!(
                     log.field("user.id"),
                     Some(&SiemField::User("IAMUser:811596193553/HIDDEN_DUE_TO_SECURITY_REASONS".to_string()))
                 );
@@ -310,6 +316,10 @@ mod aws_tests {
         log.set_event(SiemEvent::Json(log_val));
         match parse_general_log(log) {
             Ok(log) => {
+                assert_eq!(
+                    log.field("user.mfa"),
+                    Some(&SiemField::from_str("Yes"))
+                );
                 assert_eq!(
                     log.field("user.id"),
                     Some(&SiemField::from_str("arn:aws:iam::811596193553:root"))
