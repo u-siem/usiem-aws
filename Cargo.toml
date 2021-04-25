@@ -1,0 +1,20 @@
+[package]
+name = "u-siem-aws"
+version = "0.0.1"
+authors = ["Samuel Garcés <samuel.garces@protonmail.com>"]
+license = "MIT"
+description = "uSIEM AWS log parser"
+repository = "https://github.com/u-siem/usiem-aws"
+keywords = ["SIEM", "security", "logs","aws","parser"]
+categories = ["parsing"]
+edition = "2018"
+
+[lib]
+name = "usiem_aws"
+path = "src/lib.rs"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive", "rc"] }
+serde_json = { version = "1.0" }
+u-siem = {version = "0.0"}
+chrono = "0.4"

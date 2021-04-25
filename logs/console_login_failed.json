@@ -1,0 +1,28 @@
+{
+    "additionalEventData": {
+        "LoginTo": "https://console.aws.amazon.com/iam/home?region=us-west-2&state=hashArgs%23&isauthcode=true",
+        "MobileVersion": "No",
+        "MFAUsed": "No"
+    },
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+    "eventID": "dfa44a56-a58e-4e49-84fd-9128ee48ce8c",
+    "errorMessage": "No username found in supplied account",
+    "userIdentity": {
+        "type": "IAMUser",
+        "accountId": "811596193553",
+        "accessKeyId": "",
+        "userName": "HIDDEN_DUE_TO_SECURITY_REASONS"
+    },
+    "eventType": "AwsConsoleSignIn",
+    "sourceIPAddress": "8.120.255.102",
+    "eventName": "ConsoleLogin",
+    "eventSource": "signin.amazonaws.com",
+    "recipientAccountId": "811596193553",
+    "requestParameters": null,
+    "awsRegion": "us-east-1",
+    "responseElements": {
+        "ConsoleLogin": "Failure"
+    },
+    "eventVersion": "1.05",
+    "eventTime": "2017-05-17T23:23:34Z"
+}
