@@ -12,7 +12,6 @@ pub fn aws_console_sign_in(log_value : &serde_json::Value, mut log : SiemLog) ->
         None => return Err(LogParsingError::NoValidParser(log))
     };
     if event_name == "ConsoleLogin" {
-        log.set_service(Cow::Borrowed("ConsoleLogin"));
         match log_value.get("additionalEventData") {
             Some(additional) => match get_string_field(additional, "MFAUsed") {
                 Some(val) => {log.add_field("user.mfa",val);},
@@ -100,7 +99,7 @@ pub fn aws_console_sign_in(log_value : &serde_json::Value, mut log : SiemLog) ->
 
 #[cfg(test)]
 mod aws_tests {
-    use super::super::super::parse_general_log;
+    use super::super::super::parse_cloudtrail_log;
     use usiem::events::auth::LoginOutcome;
     use usiem::events::field::{SiemField, SiemIp};
     use usiem::events::{SiemEvent, SiemLog};
@@ -137,7 +136,7 @@ mod aws_tests {
         });
         let mut log = SiemLog::new(String::new(), 0, SiemIp::V4(1));
         log.set_event(SiemEvent::Json(log_val));
-        match parse_general_log(log) {
+        match parse_cloudtrail_log(log) {
             Ok(log) => {
                 assert_eq!(
                     log.field("user.mfa"),
@@ -226,7 +225,7 @@ mod aws_tests {
         });
         let mut log = SiemLog::new(String::new(), 0, SiemIp::V4(1));
         log.set_event(SiemEvent::Json(log_val));
-        match parse_general_log(log) {
+        match parse_cloudtrail_log(log) {
             Ok(log) => {
                 assert_eq!(
                     log.field("user.mfa"),
@@ -314,7 +313,7 @@ mod aws_tests {
         });
         let mut log = SiemLog::new(String::new(), 0, SiemIp::V4(1));
         log.set_event(SiemEvent::Json(log_val));
-        match parse_general_log(log) {
+        match parse_cloudtrail_log(log) {
             Ok(log) => {
                 assert_eq!(
                     log.field("user.mfa"),

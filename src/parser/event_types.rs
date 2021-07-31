@@ -4,6 +4,7 @@ use std::collections::BTreeMap;
 use usiem::components::common::LogParsingError;
 use usiem::events::field::SiemField;
 use usiem::events::SiemLog;
+use std::borrow::Cow;
 
 pub fn aws_event_type(
     log_value: serde_json::Value,
@@ -12,6 +13,15 @@ pub fn aws_event_type(
     let event_type = match log_value.get("eventType") {
         Some(val) => val.as_str().unwrap_or(""),
         None => return Err(LogParsingError::NoValidParser(log)),
+    };
+    let event_source = match log_value.get("eventSource") {
+        Some(val) => val.as_str().unwrap_or(""),
+        None => return Err(LogParsingError::NoValidParser(log)),
+    };
+    log.set_service(Cow::Owned(event_source.to_string()));
+    match log_value.get("eventName") {
+        Some(val) => {log.add_field("event.action",SiemField::from_str(val.as_str().unwrap_or("").to_string()))},
+        None => {}
     };
     let fields = extract_fields(&log_value);
     for (key, field) in fields.into_iter() {

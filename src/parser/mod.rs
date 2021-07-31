@@ -7,7 +7,7 @@ mod event_types;
 mod awstypes;
 use event_types::aws_event_type;
 
-pub fn parse_general_log(mut log: SiemLog) -> Result<SiemLog, LogParsingError> {
+pub fn parse_cloudtrail_log(mut log: SiemLog) -> Result<SiemLog, LogParsingError> {
     let log_value = match log.event() {
         SiemEvent::Unknown => {
             let log_message = log.message();
@@ -56,4 +56,3 @@ fn get_string_field(log_value: &serde_json::Value, name: &str) -> Option<SiemFie
         None => None,
     }
 }
-
